@@ -1,23 +1,26 @@
 package com.hga.blog.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.util.List;
-
+//@JsonSerialize(using = ToStringSerializer.class)//这个注解的作用是保证了雪花算法得到的id的精度
 @Data
 public class ArticleVo {
-
+    //一定要记得加 要不然 会出现精度损失
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     private String title;
 
     private String summary;
 
-    private int commentCounts;
+    private Integer commentCounts;
 
-    private int viewCounts;
+    private Integer viewCounts;
 
-    private int weight;
+    private Integer weight;
     /**
      * 创建时间
      */
@@ -25,10 +28,10 @@ public class ArticleVo {
 
     private String author;
 
-    //private ArticleBodyVo body;
+    private ArticleBodyVo body;
 
     private List<TagVo> tags;
 
-    //private List<CategoryVo> categorys;
+    private CategoryVo category;
 
 }

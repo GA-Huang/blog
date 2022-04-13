@@ -1,9 +1,9 @@
 package com.hga.blog.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.hga.blog.dao.pojo.SysUser;
+import com.hga.blog.dao.pojo.ArticleBody;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SysUserMapper extends BaseMapper<SysUser> {
+public interface ArticleBodyMapper extends BaseMapper<ArticleBody> {
 }
