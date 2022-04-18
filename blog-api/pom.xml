@@ -23,6 +23,12 @@
     </properties>
 
     <dependencies>
+<!--        七牛云-->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>[7.7.0, 7.7.99]</version>
+        </dependency>
 <!--        md5加密的依赖包-->
         <dependency>
             <groupId>commons-codec</groupId>

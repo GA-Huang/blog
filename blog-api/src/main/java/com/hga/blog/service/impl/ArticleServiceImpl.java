@@ -1,6 +1,7 @@
 package com.hga.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hga.blog.controller.ArticleParam;
 import com.hga.blog.dao.mapper.ArticleBodyMapper;
@@ -35,6 +36,14 @@ public class ArticleServiceImpl implements ArticleService {
     private SysUserService sysUserService;
     @Autowired
     private ThreadService threadService;
+
+
+    @Override
+    public Result listArticle(PageParams pageParams) {
+        Page<Article> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
+        IPage<Article> articleIPage = this.articleMapper.listArticle(page,pageParams.getCategoryId(),pageParams.getTagId(),pageParams.getYear(),pageParams.getMonth());
+        return Result.success(copyList(articleIPage.getRecords(),true,true));
+    }
     @Override
     public List<ArticleVo> listArticlesPage(PageParams pageParams) {
         /**
@@ -42,6 +51,22 @@ public class ArticleServiceImpl implements ArticleService {
          */
         Page<Article> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+
+        if (pageParams.getCategoryId() != null) {
+            queryWrapper.eq(Article::getCategoryId,pageParams.getCategoryId());
+        }
+        List<Long> articleIdList = new ArrayList<>();
+        if (pageParams.getTagId() != null){
+            LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId,pageParams.getTagId());
+            List<ArticleTag> articleTags = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
+            for (ArticleTag articleTag : articleTags) {
+                articleIdList.add(articleTag.getArticleId());
+            }
+            if (articleIdList.size() > 0){
+                queryWrapper.in(Article::getId,articleIdList);
+            }
+        }
         //是否置顶进行排序
         //等于order by create_date desc 按照时间降序排
         queryWrapper.orderByDesc(Article::getWeight,Article::getCreateDate);

@@ -1,5 +1,6 @@
 package com.hga.blog.controller;
 
+import com.hga.blog.common.cache.Cache;
 import com.hga.blog.service.ArticleService;
 import com.hga.blog.vo.ArticleVo;
 import com.hga.blog.vo.Result;
@@ -24,12 +25,12 @@ public class ArticleController {
 	//Result是统一结果返回
     @PostMapping
     public Result articles(@RequestBody PageParams pageParams) {
-        //ArticleVo 页面接收的数据
-        List<ArticleVo> articles = articleService.listArticlesPage(pageParams);
 
-        return Result.success(articles);
+
+        return articleService.listArticle(pageParams);
     }
     @PostMapping("/hot")
+    @Cache(expire = 5 * 60 * 1000,name = "hot_article")
     public Result hotArticle(){
         int limit = 5;
         return articleService.hotArticle(limit);
